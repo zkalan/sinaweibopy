@@ -24,7 +24,10 @@ import hashlib
 import base64
 
 import urllib
-import urllib3
+try:
+    import urllib2
+except ImportError:
+    import urllib3
 import gzip
 
 import logging
