@@ -11,7 +11,10 @@ Python client SDK for sina weibo API using OAuth 2.
 try:
     from cStringIO import StringIO
 except ImportError:
-    from StringIO import StringIO
+    try:
+        from StringIO import StringIO
+    except ImportError:
+        import io
 
 import time
 import json
@@ -21,7 +24,7 @@ import hashlib
 import base64
 
 import urllib
-import urllib2
+import urllib3
 import gzip
 
 import logging
@@ -29,7 +32,7 @@ import mimetypes
 import collections
 
 
-class APIError(StandardError):
+class APIError(BaseException):
     '''
     raise APIError if receiving json message indicating failure.
     '''
@@ -37,7 +40,7 @@ class APIError(StandardError):
         self.error_code = error_code
         self.error = error
         self.request = request
-        StandardError.__init__(self, error)
+        BaseException.__init__(self, error)
 
     def __str__(self):
         return 'APIError: %s: %s, request: %s' % (self.error_code, self.error, self.request)
